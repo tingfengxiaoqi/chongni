@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="seg">
+    <view class="seg-item {{tab === 'all' ? 'on' : ''}}" data-tab="all" bindtap="onTab">全部</view>
+    <view class="seg-item {{tab === 'unpaid' ? 'on' : ''}}" data-tab="unpaid" bindtap="onTab">待支付</view>
+    <view class="seg-item {{tab === 'pending' ? 'on' : ''}}" data-tab="pending" bindtap="onTab">待发货</view>
+    <view class="seg-item {{tab === 'shipping' ? 'on' : ''}}" data-tab="shipping" bindtap="onTab">配送中</view>
+  </view>
+
+  <view class="empty" wx:if="{{!list.length}}">
+    <view class="emoji">📦</view>
+    <view class="title">还没有订单</view>
+    <view class="muted">去商城逛逛再回来看</view>
+    <view class="btn" bindtap="goMall" hover-class="pressed">去商城</view>
+  </view>
+
+  <view class="card" wx:for="{{list}}" wx:key="id">
+    <view class="head">
+      <text class="id">{{item.id}}</text>
+      <text class="status">{{item.payStatusText}} · {{item.statusText}}</text>
+    </view>
+    <view class="line" wx:for="{{item.items}}" wx:for-item="g" wx:key="id">
+      <text>{{g.icon}} {{g.name}} ×{{g.count}}</text>
+      <text class="price">¥{{g.price}}</text>
+    </view>
+    <view class="foot">
+      <view class="muted tiny">{{item.createdAt}}{{item.localOnly ? ' · 本地' : ''}}</view>
+      <view class="right">
+        <text class="amount">¥{{item.amount}}</text>
+          <view class="btn sm" wx:if="{{item.payStatus === 'unpaid'}}" data-id="{{item.id}}" bindtap="onPay" hover-class="pressed">支付</view>
+      </view>
+    </view>
+  </view>
+</view>

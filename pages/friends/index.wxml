@@ -1,0 +1,30 @@
+<view class="page">
+  <view class="sub">{{friends.length}} 位 · 用对方注册手机号添加，聊天经服务端实时转发</view>
+  <view class="card">
+    <view class="friend" wx:for="{{friends}}" wx:key="id" data-id="{{item.id}}" bindtap="onChat" hover-class="pressed">
+      <view class="av">{{item.avatar}}</view>
+      <view class="meta">
+        <view class="name-row">
+          <text class="name">{{item.name}}</text>
+          <text class="badge" wx:if="{{item.unread}}">{{item.unread}}</text>
+        </view>
+        <view class="muted tiny preview">{{item.preview || item.detail}}</view>
+      </view>
+      <view class="chat">聊天</view>
+    </view>
+    <view class="empty" wx:if="{{!friends.length}}">还没有好友，用手机号添加一位真实用户</view>
+  </view>
+  <view class="btn" bindtap="openAdd" hover-class="pressed">＋ 添加好友</view>
+</view>
+
+<view class="mask" wx:if="{{showAdd}}" bindtap="closeAdd">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">添加好友</text><view class="close-x" bindtap="closeAdd">×</view></view>
+    <view class="field">
+      <text class="field-label">对方手机号</text>
+      <input class="input" type="number" maxlength="11" placeholder="对方在宠溺注册的手机号" value="{{addPhone}}" bindinput="onAddPhone" />
+    </view>
+    <view class="muted tiny" style="margin-bottom:20rpx">双方都需已登录注册；添加后即可互发消息。</view>
+    <view class="btn" bindtap="saveAdd" hover-class="pressed">添加</view>
+  </view>
+</view>

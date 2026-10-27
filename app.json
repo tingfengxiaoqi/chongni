@@ -1,0 +1,74 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/login/index",
+    "pages/register/index",
+    "pages/calendar/index",
+    "pages/square/index",
+    "pages/nearby/index",
+    "pages/me/index",
+    "pages/mall/index",
+    "pages/goods/index",
+    "pages/friends/index",
+    "pages/messages/index",
+    "pages/chat/index",
+    "pages/cart/index",
+    "pages/checkout/index",
+    "pages/orders/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFF8F1",
+    "navigationBarTitleText": "宠溺",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F6F1EA",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#9A9188",
+    "selectedColor": "#FF6A2A",
+    "backgroundColor": "#FFFDF9",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-on.png"
+      },
+      {
+        "pagePath": "pages/calendar/index",
+        "text": "日历",
+        "iconPath": "images/tab-calendar.png",
+        "selectedIconPath": "images/tab-calendar-on.png"
+      },
+      {
+        "pagePath": "pages/square/index",
+        "text": "广场",
+        "iconPath": "images/tab-square.png",
+        "selectedIconPath": "images/tab-square-on.png"
+      },
+      {
+        "pagePath": "pages/nearby/index",
+        "text": "附近",
+        "iconPath": "images/tab-nearby.png",
+        "selectedIconPath": "images/tab-nearby-on.png"
+      },
+      {
+        "pagePath": "pages/me/index",
+        "text": "我的",
+        "iconPath": "images/tab-me.png",
+        "selectedIconPath": "images/tab-me-on.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于搜索附近的宠物医院和宠物店"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

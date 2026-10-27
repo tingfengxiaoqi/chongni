@@ -1,0 +1,78 @@
+.page {
+  min-height: 100vh;
+  padding: 140rpx 36rpx 48rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 32rpx;
+}
+
+.name {
+  margin-top: 28rpx;
+  font-size: 60rpx;
+  font-weight: 720;
+}
+
+.slogan {
+  margin-top: 8rpx;
+  color: #8A8178;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12rpx;
+  margin: 36rpx 0 28rpx;
+}
+
+.tag-item {
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 10rpx 18rpx;
+  font-size: 22rpx;
+  color: #5B6878;
+  box-shadow: 0 8rpx 20rpx rgba(80, 40, 10, 0.05);
+}
+
+.form {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.code-row {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.code-btn {
+  flex: none;
+}
+
+.guest {
+  margin-top: 24rpx;
+  text-align: center;
+  color: #FF6A2A;
+  font-size: 28rpx;
+}
+
+.foot {
+  margin-top: 28rpx;
+  text-align: center;
+  color: #A39A91;
+  font-size: 22rpx;
+  line-height: 1.6;
+}

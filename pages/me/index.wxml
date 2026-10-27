@@ -1,0 +1,61 @@
+<view class="page">
+  <view class="head">
+    <view class="avatar">🐾</view>
+    <view class="meta">
+      <view class="name">{{nickname}} <text class="edit" bindtap="openSettings">✏️</text></view>
+      <view class="muted tiny">📍 {{city}} · 已陪伴 {{days}} 天</view>
+    </view>
+    <view class="gear" bindtap="openSettings">⚙️</view>
+  </view>
+
+  <view class="stats">
+    <view><view class="n">{{friendCount}}</view><view class="muted tiny">好友</view></view>
+    <view><view class="n">{{postCount}}</view><view class="muted tiny">动态</view></view>
+    <view><view class="n">0</view><view class="muted tiny">获赞</view></view>
+  </view>
+
+  <view class="card menu">
+    <view class="row" bindtap="goFriends" hover-class="pressed">
+      <text>👥 我的好友</text>
+      <text class="right">{{friendCount}} ›</text>
+    </view>
+    <view class="row" bindtap="goMessages" hover-class="pressed">
+      <text>💬 消息</text>
+      <view class="right">
+        <text class="badge" wx:if="{{unread}}">{{unread}}</text>
+        <text> ›</text>
+      </view>
+    </view>
+    <view class="row" bindtap="goSquare" hover-class="pressed">
+      <text>🖼️ 我的动态</text>
+      <text class="right">{{postCount}} ›</text>
+    </view>
+    <view class="row" bindtap="goMall" hover-class="pressed">
+      <text>🛍️ 商城</text>
+      <text class="right">›</text>
+    </view>
+    <view class="row" bindtap="goCart" hover-class="pressed">
+      <text>🛒 购物车</text>
+      <text class="right">{{cartCount}} ›</text>
+    </view>
+    <view class="row" bindtap="goOrders" hover-class="pressed">
+      <text>📦 我的订单</text>
+      <text class="right">{{orderCount}} ›</text>
+    </view>
+    <view class="row" bindtap="openSettings" hover-class="pressed">
+      <text>⚙️ 设置</text>
+      <text class="right">›</text>
+    </view>
+  </view>
+</view>
+
+<view class="mask" wx:if="{{showSettings}}" bindtap="closeSettings">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">设置</text><view class="close-x" bindtap="closeSettings">×</view></view>
+    <view class="field"><text class="field-label">昵称</text><input class="input" value="{{editNick}}" bindinput="onNick" /></view>
+    <view class="field"><text class="field-label">城市</text><input class="input" value="{{editCity}}" bindinput="onCity" /></view>
+    <view class="btn" bindtap="saveSettings" hover-class="pressed">保存</view>
+    <view class="btn ghost" style="margin-top:16rpx" bindtap="onLogout" hover-class="pressed">退出登录</view>
+    <view class="btn ghost" style="margin-top:16rpx" bindtap="onReset" hover-class="pressed">清除本地缓存</view>
+  </view>
+</view>

@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="empty" wx:if="{{!items.length}}">
+    <view class="emoji">🛒</view>
+    <view class="title">购物车是空的</view>
+    <view class="muted">去商城给毛孩子挑点好东西吧</view>
+    <view class="btn" bindtap="goMall" hover-class="pressed">去逛商城</view>
+  </view>
+
+  <block wx:else>
+    <view class="card" wx:for="{{items}}" wx:key="id">
+      <image class="ico-img" wx:if="{{item.thumb}}" src="{{item.thumb}}" mode="aspectFill" data-id="{{item.id}}" bindtap="goDetail" />
+      <view class="ico" wx:else data-id="{{item.id}}" bindtap="goDetail">{{item.icon}}</view>
+      <view class="body">
+        <view class="name" data-id="{{item.id}}" bindtap="goDetail">{{item.name}}</view>
+        <view class="price">¥{{item.price}}</view>
+        <view class="ops">
+          <view class="qty">
+            <view class="qbtn" data-id="{{item.id}}" data-delta="-1" catchtap="onQty">−</view>
+            <text class="n">{{item.count}}</text>
+            <view class="qbtn" data-id="{{item.id}}" data-delta="1" catchtap="onQty">+</view>
+          </view>
+          <view class="del" data-id="{{item.id}}" catchtap="onRemove">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bar">
+      <view>
+        <text class="muted">合计 </text>
+        <text class="total">¥{{total}}</text>
+      </view>
+      <view class="btn" bindtap="goCheckout" hover-class="pressed">去结算</view>
+    </view>
+  </block>
+</view>

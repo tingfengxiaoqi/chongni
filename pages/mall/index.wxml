@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="head">
+    <view>
+      <view class="h1">商城</view>
+      <view class="sub">{{fromServer ? '口粮玩具一站购 · 已连服务端' : '服务端未连接，暂用本地备份'}}</view>
+    </view>
+    <view class="loc">📍 {{city}}</view>
+  </view>
+
+  <scroll-view class="chips" scroll-x>
+    <view class="chip {{mallCat === item ? 'on' : ''}}" wx:for="{{cats}}" wx:key="*this" data-cat="{{item}}" bindtap="onCat">{{item}}</view>
+  </scroll-view>
+
+  <view class="goods">
+    <view class="good" wx:for="{{goods}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail" hover-class="pressed">
+      <image class="pic-img" wx:if="{{item.thumb}}" src="{{item.thumb}}" mode="aspectFill" />
+      <view class="pic" wx:else>{{item.icon}}</view>
+      <view class="body">
+        <view class="title">{{item.name}}</view>
+        <view class="sold">{{item.desc || ('已售 ' + item.sold)}}</view>
+        <view class="bottom">
+          <text class="price">¥{{item.price}}</text>
+          <view class="plus" data-id="{{item.id}}" catchtap="onCart">+</view>
+        </view>
+        <view class="detail-hint">查看详情 ›</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{!goods.length}}">这个分类暂时没有商品</view>
+
+  <view class="cart-bar" bindtap="goCart" hover-class="pressed">
+    <text>购物车 {{cartCount}} 件</text>
+    <text class="go">去结算 ›</text>
+  </view>
+</view>

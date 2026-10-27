@@ -1,0 +1,31 @@
+.page { padding: 24rpx 28rpx 60rpx; }
+.card {
+  background: #fff; border-radius: 22rpx; padding: 22rpx;
+  margin-bottom: 18rpx; box-shadow: 0 10rpx 24rpx rgba(80,40,10,.05);
+}
+.h2 { font-weight: 700; margin-bottom: 16rpx; }
+.field { margin-bottom: 16rpx; }
+.label { display: block; color: #8A8178; font-size: 24rpx; margin-bottom: 8rpx; }
+.input, .area {
+  width: 100%; background: #F8F3EC; border-radius: 14rpx; padding: 18rpx 20rpx;
+  box-sizing: border-box;
+}
+.area { min-height: 140rpx; }
+.line {
+  display: flex; justify-content: space-between; gap: 12rpx;
+  padding: 12rpx 0; border-bottom: 1rpx solid #F3EBE1; font-size: 26rpx;
+}
+.sum {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16rpx; font-weight: 650;
+}
+.price { color: #E24B4B; }
+.strong { font-size: 34rpx; font-weight: 700; }
+.tip { font-size: 24rpx; line-height: 1.5; margin: 8rpx 0 24rpx; }
+.btn {
+  background: #FF6A2A; color: #fff; text-align: center; border-radius: 999rpx;
+  padding: 24rpx; font-weight: 700;
+}
+.btn.disabled { opacity: .55; }
+.pressed { opacity: .86; }
+.muted { color: #8A8178; }

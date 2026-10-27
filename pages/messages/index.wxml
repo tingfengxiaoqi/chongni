@@ -1,0 +1,25 @@
+<view class="page">
+  <view class="sub">点一条就能接着聊</view>
+  <view class="card">
+    <view
+      class="msg"
+      wx:for="{{messages}}"
+      wx:key="id"
+      data-friend="{{item.friendId}}"
+      data-system="{{item.system}}"
+      bindtap="onOpen"
+      hover-class="pressed"
+    >
+      <view class="av">{{item.avatar || '💬'}}</view>
+      <view class="meta">
+        <view class="from">
+          <text>{{item.from}}</text>
+          <text class="tag" wx:if="{{item.unread}}">未读</text>
+        </view>
+        <view class="muted preview">{{item.text}}</view>
+      </view>
+      <view class="time muted tiny">{{item.time || ''}}</view>
+    </view>
+    <view class="empty" wx:if="{{!messages.length}}">还没有消息</view>
+  </view>
+</view>

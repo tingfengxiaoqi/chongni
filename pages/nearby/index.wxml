@@ -1,0 +1,59 @@
+<view class="map-page">
+  <map
+    class="map-full"
+    latitude="{{lat}}"
+    longitude="{{lng}}"
+    scale="{{scale}}"
+    show-location
+    enable-zoom
+    enable-scroll
+    enable-rotate="{{false}}"
+    markers="{{markers}}"
+    bindmarkertap="onMarkerTap"
+  />
+
+  <view class="float-top">
+    <view class="seg float-seg">
+      <view class="seg-item {{tab === 'hospital' ? 'on' : ''}}" data-tab="hospital" bindtap="onTab">医院</view>
+      <view class="seg-item {{tab === 'shop' ? 'on' : ''}}" data-tab="shop" bindtap="onTab">宠物店</view>
+    </view>
+    <view class="city-pill" bindtap="onRelocate">📍 {{city}}</view>
+  </view>
+
+  <view class="locate-btn" bindtap="onRelocate" hover-class="pressed">
+    {{locating ? '…' : '◎'}}
+  </view>
+
+  <view class="sheet">
+    <view class="sheet-handle"></view>
+    <view class="sheet-head">
+      <view>
+        <view class="sheet-title">{{tab === 'shop' ? '附近宠物店' : '附近宠物医院'}}</view>
+        <view class="muted tiny">{{searching ? '搜索中…' : (address || (places.length + ' 个结果'))}}</view>
+      </view>
+      <view class="btn ghost sm" bindtap="onRelocate" hover-class="pressed">{{locating ? '定位中' : '刷新'}}</view>
+    </view>
+
+    <view class="notice warn" wx:if="{{locError}}">
+      <text>{{locError}}</text>
+      <text class="link" bindtap="onOpenSetting">去开启权限</text>
+    </view>
+    <view class="notice" wx:elif="{{mapHint}}">{{mapHint}}</view>
+
+    <scroll-view class="sheet-list" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="place" wx:for="{{places}}" wx:key="id" data-id="{{item.id}}" bindtap="onPlaceTap" hover-class="pressed">
+        <view class="ico">{{item.icon}}</view>
+        <view class="meta">
+          <view class="name">{{item.name}}</view>
+          <view class="muted tiny">{{item.meta}}</view>
+        </view>
+        <view class="actions">
+          <view class="chip-btn" wx:if="{{item.tel}}" data-id="{{item.id}}" catchtap="onCall">电话</view>
+          <view class="chip-btn on">导航</view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{!places.length && !searching && !locating && !locError}}">附近暂无结果</view>
+      <view class="sheet-pad"></view>
+    </scroll-view>
+  </view>
+</view>

@@ -1,0 +1,38 @@
+<view class="page">
+  <scroll-view
+    class="list"
+    scroll-y
+    scroll-into-view="{{scrollInto}}"
+    scroll-with-animation
+  >
+    <view class="tip">和 {{friendName}} 的对话保存在本机</view>
+    <view
+      class="row {{item.from === 'me' ? 'me' : 'friend'}}"
+      wx:for="{{messages}}"
+      wx:key="id"
+      id="msg-{{item.id}}"
+    >
+      <view class="av" wx:if="{{item.from !== 'me'}}">{{friendAvatar}}</view>
+      <view class="bubble">
+        <text>{{item.text}}</text>
+        <view class="time">{{item.time}}</view>
+      </view>
+      <view class="av me-av" wx:if="{{item.from === 'me'}}">🐾</view>
+    </view>
+    <view id="bottom"></view>
+  </scroll-view>
+
+  <view class="composer">
+    <input
+      class="input"
+      confirm-type="send"
+      value="{{draft}}"
+      placeholder="跟铲屎官朋友说点什么"
+      bindinput="onInput"
+      bindconfirm="onSend"
+      adjust-position
+      hold-keyboard
+    />
+    <view class="send {{draft ? '' : 'disabled'}}" bindtap="onSend" hover-class="pressed">发送</view>
+  </view>
+</view>

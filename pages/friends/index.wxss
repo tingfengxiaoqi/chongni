@@ -1,0 +1,30 @@
+.page { padding: 24rpx 28rpx 40rpx; }
+.friend {
+  display: flex; align-items: center; gap: 18rpx;
+  padding: 20rpx 0; border-bottom: 1rpx solid #EFE7DC;
+}
+.friend:last-child { border-bottom: 0; }
+.av {
+  width: 80rpx; height: 80rpx; border-radius: 50%; background: #FFF1E6;
+  display: flex; align-items: center; justify-content: center; font-size: 40rpx; flex: none;
+}
+.meta { flex: 1; min-width: 0; }
+.name-row { display: flex; align-items: center; gap: 10rpx; }
+.name { font-weight: 650; }
+.preview {
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.badge {
+  min-width: 28rpx; height: 28rpx; padding: 0 8rpx; border-radius: 999rpx;
+  background: #E24B4B; color: #fff; font-size: 18rpx; line-height: 28rpx; text-align: center;
+}
+.chat { color: #E24B4B; font-size: 26rpx; flex: none; }
+.emoji-row { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.emoji {
+  width: 72rpx; height: 72rpx; border-radius: 50%; background: #fff;
+  border: 4rpx solid transparent; display: flex; align-items: center; justify-content: center; font-size: 36rpx;
+}
+.emoji.on { border-color: #FF6A2A; background: #FFF1E6; }

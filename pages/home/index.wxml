@@ -1,0 +1,163 @@
+<view class="page" wx:if="{{guest}}">
+  <view class="h1">{{greet}}</view>
+  <view class="loc">📍 {{city}} · 先随便逛逛</view>
+  <view class="card tip-card">
+    <view class="muted">游客模式只能看看广场和商城。登录并登记宠物后，首页档案、提醒和账本才会解锁。</view>
+    <view class="btn" style="margin-top:20rpx" bindtap="goLogin" hover-class="pressed">去登录</view>
+  </view>
+</view>
+
+<block wx:elif="{{pet}}">
+  <view class="page">
+    <view class="top">
+      <view>
+        <view class="h1">{{greet}}</view>
+        <view class="loc">📍 {{city}} · 今天也要好好撸宠</view>
+      </view>
+      <view class="switch">
+        <view class="chip">
+          <view class="dot">
+            <image wx:if="{{pet.photo}}" src="{{pet.photo}}" mode="aspectFill"></image>
+            <text wx:else>{{pet.avatar}}</text>
+          </view>
+          <text>{{pet.name}}</text>
+        </view>
+        <view class="add" bindtap="onAddPet" hover-class="pressed">+</view>
+      </view>
+    </view>
+
+    <view class="hero">
+      <view class="hero-main">
+        <view class="hero-avatar">
+          <image wx:if="{{pet.photo}}" src="{{pet.photo}}" mode="aspectFill"></image>
+          <text wx:else>{{pet.avatar}}</text>
+        </view>
+        <view>
+          <view class="hero-name">{{pet.name}}</view>
+          <view class="hero-meta">{{pet.breed}} · {{pet.gender}} · {{age}}</view>
+        </view>
+      </view>
+      <view class="stats">
+        <view class="stat"><text class="num">{{wormText}}</text><text class="lab">距下次驱虫</text></view>
+        <view class="stat"><text class="num">¥{{spend}}</text><text class="lab">本月消费</text></view>
+        <view class="stat"><text class="num">{{overdue}}</text><text class="lab">逾期记录</text></view>
+      </view>
+    </view>
+
+    <view class="quick">
+      <view class="q" bindtap="openExpense" hover-class="pressed"><view class="ico">🧾</view><view>记一笔</view></view>
+      <view class="q" bindtap="openReminder" hover-class="pressed"><view class="ico">🔔</view><view>提醒</view></view>
+      <view class="q" bindtap="goMall" hover-class="pressed"><view class="ico">🛍️</view><view>商城</view></view>
+      <view class="q" bindtap="openEdit" hover-class="pressed"><view class="ico">✏️</view><view>改资料</view></view>
+    </view>
+
+    <view class="card">
+      <view class="sec-head">
+        <text class="sec-title">基础档案</text>
+        <text class="edit" bindtap="openEdit">编辑</text>
+      </view>
+      <view class="kv"><text class="k">品种</text><text>{{pet.breed}}</text></view>
+      <view class="kv"><text class="k">年龄</text><text>{{age}}</text></view>
+      <view class="kv"><text class="k">生日</text><text>{{pet.birthday || '未填写'}}</text></view>
+      <view class="kv"><text class="k">体重</text><text>{{pet.weight ? pet.weight + ' kg' : '未记录'}}</text></view>
+    </view>
+
+    <view class="card" wx:if="{{cases.length}}">
+      <view class="sec-head"><text class="sec-title">最近病例</text></view>
+      <view class="item" wx:for="{{cases}}" wx:key="id">
+        <view class="item-title">{{item.title}}</view>
+        <view class="muted tiny">{{item.date}}</view>
+        <view class="muted" wx:if="{{item.note}}">{{item.note}}</view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{expenses.length}}">
+      <view class="sec-head"><text class="sec-title">最近花销</text></view>
+      <view class="item row" wx:for="{{expenses}}" wx:key="id">
+        <view>
+          <view class="item-title">{{item.title}}</view>
+          <view class="muted tiny">{{item.cat}} · {{item.date}}</view>
+        </view>
+        <view>¥{{item.amount}}</view>
+      </view>
+    </view>
+  </view>
+</block>
+
+<!-- 提醒 -->
+<view class="mask" wx:if="{{showReminder}}" bindtap="closeModal">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">加个提醒</text><view class="close-x" bindtap="closeModal">×</view></view>
+    <view class="types">
+      <view class="type {{remType === item.id ? 'on' : ''}}" wx:for="{{reminderTypes}}" wx:key="id" data-id="{{item.id}}" bindtap="onRemType">
+        <text>{{item.icon}}</text><text>{{item.name}}</text>
+      </view>
+    </view>
+    <view class="field"><text class="field-label">做什么</text><input class="input" placeholder="体内驱虫 / 狂犬疫苗 / 洗澡……" value="{{remTitle}}" bindinput="onRemTitle" /></view>
+    <view class="row-2">
+      <view class="field"><text class="field-label">日期</text>
+        <picker class="picker" mode="date" value="{{remDate}}" bindchange="onRemDate"><view>{{remDate}}</view></picker>
+      </view>
+      <view class="field"><text class="field-label">重复</text>
+        <picker class="picker" range="{{repeats}}" value="{{remRepeatIndex}}" bindchange="onRemRepeat"><view>{{repeats[remRepeatIndex]}}</view></picker>
+      </view>
+    </view>
+    <view class="field"><text class="field-label">备注</text><input class="input" placeholder="选填" value="{{remNote}}" bindinput="onRemNote" /></view>
+    <view class="btn" bindtap="saveReminder" hover-class="pressed">保存提醒</view>
+  </view>
+</view>
+
+<!-- 记账 -->
+<view class="mask" wx:if="{{showExpense}}" bindtap="closeModal">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">记一笔</text><view class="close-x" bindtap="closeModal">×</view></view>
+    <view class="field"><text class="field-label">花在哪</text><input class="input" placeholder="猫粮 / 疫苗 / 洗澡" value="{{expTitle}}" bindinput="onExpTitle" /></view>
+    <view class="row-2">
+      <view class="field"><text class="field-label">金额</text><input class="input" type="digit" placeholder="0.00" value="{{expAmount}}" bindinput="onExpAmount" /></view>
+      <view class="field"><text class="field-label">分类</text>
+        <picker class="picker" range="{{expenseCats}}" value="{{expCatIndex}}" bindchange="onExpCat"><view>{{expenseCats[expCatIndex]}}</view></picker>
+      </view>
+    </view>
+    <view class="field"><text class="field-label">日期</text>
+      <picker class="picker" mode="date" value="{{expDate}}" bindchange="onExpDate"><view>{{expDate}}</view></picker>
+    </view>
+    <view class="btn" bindtap="saveExpense" hover-class="pressed">保存花销</view>
+  </view>
+</view>
+
+<!-- 病例 -->
+<view class="mask" wx:if="{{showCase}}" bindtap="closeModal">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">写病例</text><view class="close-x" bindtap="closeModal">×</view></view>
+    <view class="field"><text class="field-label">标题</text><input class="input" placeholder="感冒 / 体检 / 皮肤病" value="{{caseTitle}}" bindinput="onCaseTitle" /></view>
+    <view class="field"><text class="field-label">日期</text>
+      <picker class="picker" mode="date" value="{{caseDate}}" bindchange="onCaseDate"><view>{{caseDate}}</view></picker>
+    </view>
+    <view class="field"><text class="field-label">医院 / 医生</text><input class="input" placeholder="选填" value="{{caseHospital}}" bindinput="onCaseHospital" /></view>
+    <view class="field"><text class="field-label">记录</text><textarea class="textarea" placeholder="症状、用药、医嘱……" value="{{caseNote}}" bindinput="onCaseNote" /></view>
+    <view class="btn" bindtap="saveCase" hover-class="pressed">保存病例</view>
+  </view>
+</view>
+
+<!-- 改资料 -->
+<view class="mask" wx:if="{{showEdit}}" bindtap="closeModal">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">改资料</text><view class="close-x" bindtap="closeModal">×</view></view>
+    <view class="field"><text class="field-label">名字</text><input class="input" value="{{editName}}" bindinput="onEditName" /></view>
+    <view class="row-2">
+      <view class="field"><text class="field-label">品种</text>
+        <picker class="picker" range="{{editBreeds}}" value="{{editBreedIndex}}" bindchange="onEditBreed"><view>{{editBreeds[editBreedIndex]}}</view></picker>
+      </view>
+      <view class="field"><text class="field-label">性别</text>
+        <picker class="picker" range="{{genders}}" value="{{editGenderIndex}}" bindchange="onEditGender"><view>{{genders[editGenderIndex]}}</view></picker>
+      </view>
+    </view>
+    <view class="row-2">
+      <view class="field"><text class="field-label">生日</text>
+        <picker class="picker" mode="date" value="{{editBirthday}}" bindchange="onEditBirthday"><view>{{editBirthday || '未填写'}}</view></picker>
+      </view>
+      <view class="field"><text class="field-label">体重 kg</text><input class="input" type="digit" value="{{editWeight}}" bindinput="onEditWeight" /></view>
+    </view>
+    <view class="btn" bindtap="saveEdit" hover-class="pressed">保存资料</view>
+  </view>
+</view>

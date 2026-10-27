@@ -1,0 +1,75 @@
+<view class="page">
+  <view class="h1">日历</view>
+  <view class="sub">提醒、记账，都在这</view>
+  <view class="seg">
+    <view class="seg-item {{mode === 'calendar' ? 'on' : ''}}" data-mode="calendar" bindtap="onMode">日历</view>
+    <view class="seg-item {{mode === 'ledger' ? 'on' : ''}}" data-mode="ledger" bindtap="onMode">账本</view>
+  </view>
+
+  <block wx:if="{{mode === 'calendar'}}">
+    <view class="card cal">
+      <view class="cal-head">
+        <view class="nav" bindtap="prevMonth">‹</view>
+        <text>{{year}} 年 {{month}} 月</text>
+        <view class="nav" bindtap="nextMonth">›</view>
+      </view>
+      <view class="grid">
+        <view class="wd" wx:for="{{weeks}}" wx:key="*this">{{item}}</view>
+        <view
+          class="day {{item ? '' : 'empty'}} {{item.date === selectedDay ? 'on' : ''}}"
+          wx:for="{{days}}"
+          wx:key="index"
+          data-date="{{item.date}}"
+          bindtap="onSelectDay"
+        >
+          <block wx:if="{{item}}">
+            <text>{{item.d}}</text>
+            <view class="dots">
+              <view class="dot" wx:for="{{item.marks}}" wx:for-item="c" wx:key="*this" style="background:{{c}}"></view>
+            </view>
+          </block>
+        </view>
+      </view>
+      <view class="legend">
+        <view wx:for="{{reminderTypes}}" wx:key="id"><view class="lg" style="background:{{item.color}}"></view>{{item.name}}</view>
+      </view>
+    </view>
+
+    <view class="day-head">
+      <text class="sec">{{selectedDay}}</text>
+      <text class="muted tiny">{{dayItems.length}} 条</text>
+    </view>
+    <view class="card item" wx:for="{{dayItems}}" wx:key="id">
+      <view class="left">
+        <view class="mark" style="background:{{item.color}}"></view>
+        <view>
+          <view class="title">{{item.title}}<text class="tag" wx:if="{{item.overdue}}">逾期</text></view>
+          <view class="muted tiny">{{item.petName}} · {{item.typeName}}</view>
+        </view>
+      </view>
+      <view class="btn ghost sm" data-id="{{item.id}}" bindtap="onToggleDone">{{item.done ? '已完成' : '完成'}}</view>
+    </view>
+    <view class="empty" wx:if="{{!dayItems.length}}">
+      这一天还没有提醒
+      <view class="btn sm" style="margin-top:16rpx;display:inline-flex" bindtap="goHomeRemind">加个提醒</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="sums">
+      <view class="card sum"><view class="muted">本月花销</view><view class="big">¥{{monthSpend}}</view></view>
+      <view class="card sum"><view class="muted">记录条数</view><view class="big">{{expenses.length}}</view></view>
+    </view>
+    <view class="btn" bindtap="goHomeExpense" hover-class="pressed">记一笔</view>
+    <view class="card" style="margin-top:20rpx">
+      <view class="exp" wx:for="{{expenses}}" wx:key="id">
+        <view>
+          <view class="title">{{item.title}}</view>
+          <view class="muted tiny">{{item.cat}} · {{item.date}} · {{item.petName}}</view>
+        </view>
+        <view>¥{{item.amount}}</view>
+      </view>
+      <view class="empty" wx:if="{{!expenses.length}}">还没有花销记录</view>
+    </view>
+  </block>
+</view>

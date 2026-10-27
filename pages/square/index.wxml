@@ -1,0 +1,104 @@
+<view class="page">
+  <view class="head-row">
+    <view>
+      <view class="h1">广场</view>
+      <view class="sub">{{guest ? '游客可浏览，登录后点赞评论发动态' : (cityTip || '和铲屎官们聊聊毛孩子')}}</view>
+    </view>
+    <view class="login-pill" wx:if="{{guest}}" bindtap="goLogin">去登录</view>
+  </view>
+
+  <scroll-view class="chips" scroll-x>
+    <view class="chip {{tab === 'recommend' ? 'on' : ''}}" data-tab="recommend" bindtap="onTab">推荐</view>
+    <view class="chip {{tab === 'city' ? 'on' : ''}}" data-tab="city" bindtap="onTab">同城</view>
+    <view class="chip {{tab === 'breed' ? 'on' : ''}}" data-tab="breed" bindtap="onTab">同品种</view>
+    <view class="chip {{tab === 'mine' ? 'on' : ''}}" data-tab="mine" bindtap="onTab" wx:if="{{!guest}}">我的</view>
+  </scroll-view>
+
+  <view class="card post" wx:for="{{posts}}" wx:key="id">
+    <view class="head">
+      <view class="av">{{item.avatar}}</view>
+      <view class="who">
+        <view class="name-row">
+          <text class="name">{{item.user}}</text>
+          <text class="mine-tag" wx:if="{{item.mine}}">我</text>
+        </view>
+        <view class="muted tiny">{{item.city}} · {{item.time}}{{item.breed ? ' · ' + item.breed : ''}}</view>
+      </view>
+      <view class="more" wx:if="{{item.mine}}" data-id="{{item.id}}" bindtap="onDelete">删除</view>
+    </view>
+    <view class="body">{{item.text}}</view>
+    <image class="photo" wx:if="{{item.photo}}" src="{{item.photo}}" mode="aspectFill" bindtap="onPreview" data-src="{{item.photo}}" />
+    <view class="imgs" wx:elif="{{item.imgs.length}}">
+      <view class="ph" wx:for="{{item.imgs}}" wx:for-item="img" wx:key="*this" style="background:{{index % 2 ? '#FFE0EF' : '#FFE8D6'}}">{{img}}</view>
+    </view>
+    <view class="preview" wx:if="{{item.commentPreview.length}}">
+      <view class="preview-line" wx:for="{{item.commentPreview}}" wx:for-item="c" wx:key="id">
+        <text class="preview-user">{{c.user}}</text> {{c.text}}
+      </view>
+    </view>
+    <view class="acts">
+      <view class="act {{item.liked ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onLike">{{item.liked ? '❤️' : '🤍'}} {{item.likes}}</view>
+      <view class="act" data-id="{{item.id}}" bindtap="onOpenComments">💬 {{item.comments}}</view>
+      <view class="act" data-id="{{item.id}}" data-text="{{item.text}}" bindtap="onSharePost">↗ 分享</view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && !posts.length}}">
+    <view class="empty-emoji">🐾</view>
+    <view>{{tab === 'mine' ? '你还没发过动态' : '这里暂时空空的'}}</view>
+    <view class="muted tiny">{{guest ? '登录后可以发布第一条' : '点下方 + 发一条吧'}}</view>
+  </view>
+  <view class="loading muted tiny" wx:if="{{loading}}">加载中…</view>
+</view>
+
+<view class="fab" bindtap="openPost" hover-class="pressed">+</view>
+
+<!-- 发动态 -->
+<view class="mask" wx:if="{{showPost}}" bindtap="closePost">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">发动态</text><view class="close-x" bindtap="closePost">×</view></view>
+    <view class="field">
+      <text class="field-label">说点什么</text>
+      <textarea class="textarea" maxlength="500" placeholder="今天带毛孩子去了哪里……" value="{{postText}}" bindinput="onPostText"></textarea>
+      <view class="muted tiny count">{{postText.length}}/500</view>
+    </view>
+    <view class="field">
+      <text class="field-label">配图表情</text>
+      <view class="emoji-row">
+        <view class="emoji {{postImgs.indexOf(item) >= 0 ? 'on' : ''}}" wx:for="{{emojiPool}}" wx:key="*this" data-emoji="{{item}}" bindtap="onToggleEmoji">{{item}}</view>
+      </view>
+    </view>
+    <view class="field">
+      <text class="field-label">实拍（可选）</text>
+      <view class="photo-box" bindtap="onPickPhoto" wx:if="{{!postPhoto}}">＋ 选一张照片</view>
+      <view class="photo-wrap" wx:else>
+        <image class="photo-preview" src="{{postPhoto}}" mode="aspectFill" />
+        <view class="photo-clear" bindtap="onClearPhoto">移除</view>
+      </view>
+    </view>
+    <view class="btn {{posting ? 'disabled' : ''}}" bindtap="savePost" hover-class="pressed">{{posting ? '发布中…' : '发布到广场'}}</view>
+  </view>
+</view>
+
+<!-- 评论 -->
+<view class="mask" wx:if="{{showComments}}" bindtap="closeComments">
+  <view class="sheet tall" catchtap="noop">
+    <view class="sheet-head"><text class="sheet-title">评论</text><view class="close-x" bindtap="closeComments">×</view></view>
+    <scroll-view class="comment-list" scroll-y>
+      <view class="comment" wx:for="{{commentList}}" wx:key="id">
+        <view class="av sm">{{item.avatar}}</view>
+        <view class="comment-body">
+          <view class="name">{{item.user}}</view>
+          <view class="comment-text">{{item.text}}</view>
+          <view class="muted tiny">{{item.time || item.createdAt}}</view>
+        </view>
+      </view>
+      <view class="empty tiny" wx:if="{{!commentList.length}}">还没有评论，来抢沙发</view>
+    </scroll-view>
+    <view class="comment-bar" wx:if="{{!guest}}">
+      <input class="comment-input" placeholder="友善发言…" value="{{commentDraft}}" bindinput="onCommentDraft" confirm-type="send" bindconfirm="onSendComment" />
+      <view class="btn sm" bindtap="onSendComment" hover-class="pressed">发送</view>
+    </view>
+    <view class="guest-tip" wx:else bindtap="goLogin">登录后才能评论</view>
+  </view>
+</view>

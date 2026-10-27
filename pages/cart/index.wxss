@@ -1,0 +1,41 @@
+.page { padding: 24rpx 28rpx 160rpx; min-height: 100vh; box-sizing: border-box; }
+.empty {
+  margin-top: 160rpx; text-align: center; color: #8A8178;
+}
+.emoji { font-size: 80rpx; margin-bottom: 12rpx; }
+.empty .title { color: #2C241C; font-size: 34rpx; font-weight: 650; margin-bottom: 8rpx; }
+.card {
+  display: flex; gap: 18rpx; background: #fff; border-radius: 22rpx;
+  padding: 20rpx; margin-bottom: 14rpx;
+  box-shadow: 0 10rpx 24rpx rgba(80,40,10,.05);
+}
+.ico, .ico-img {
+  width: 110rpx; height: 110rpx; border-radius: 20rpx; background: #FFF1E6;
+  display: flex; align-items: center; justify-content: center; font-size: 48rpx; flex: none;
+}
+.ico-img { display: block; }
+.body { flex: 1; min-width: 0; }
+.name { font-weight: 650; }
+.price { color: #E24B4B; font-weight: 700; margin: 8rpx 0 12rpx; }
+.ops { display: flex; justify-content: space-between; align-items: center; }
+.qty { display: flex; align-items: center; gap: 12rpx; }
+.qbtn {
+  width: 48rpx; height: 48rpx; border-radius: 12rpx; background: #F4EBE2;
+  text-align: center; line-height: 44rpx; font-size: 28rpx;
+}
+.n { min-width: 36rpx; text-align: center; }
+.del { color: #8A8178; font-size: 24rpx; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20rpx 28rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #FFFDF9; border-top: 1rpx solid #EFE6DA;
+}
+.total { color: #E24B4B; font-size: 36rpx; font-weight: 700; }
+.btn {
+  display: inline-block; background: #FF6A2A; color: #fff; border-radius: 999rpx;
+  padding: 18rpx 36rpx; font-weight: 650; margin-top: 28rpx;
+}
+.bar .btn { margin-top: 0; }
+.pressed { opacity: .86; }
+.muted { color: #8A8178; }

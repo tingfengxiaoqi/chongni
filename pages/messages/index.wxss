@@ -1,0 +1,28 @@
+.page { padding: 24rpx 28rpx 40rpx; }
+.msg {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #EFE7DC;
+}
+.msg:last-child { border-bottom: 0; }
+.av {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #FFF1E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+  flex: none;
+}
+.meta { flex: 1; min-width: 0; }
+.from { font-weight: 650; margin-bottom: 4rpx; display: flex; align-items: center; gap: 8rpx; }
+.preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.time { flex: none; }

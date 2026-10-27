@@ -1,0 +1,46 @@
+.page { padding-bottom: calc(140rpx + env(safe-area-inset-bottom)); }
+.banner { width: 100%; height: 620rpx; background: #F7EEE4; }
+.banner-img { width: 100%; height: 620rpx; }
+.banner.emoji {
+  height: 420rpx; display: flex; align-items: center; justify-content: center;
+}
+.big { font-size: 120rpx; }
+.card {
+  margin: 20rpx 24rpx; background: #FFFDF9; border-radius: 24rpx; padding: 28rpx;
+  box-shadow: 0 10rpx 24rpx rgba(80,40,10,.05);
+}
+.price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16rpx; }
+.main .price { color: #E24B4B; font-size: 48rpx; font-weight: 760; line-height: 1; }
+.yen { font-size: 28rpx; margin-right: 4rpx; }
+.sold-tag {
+  font-size: 22rpx; color: #8A8178; background: #F7EEE4;
+  padding: 8rpx 16rpx; border-radius: 999rpx; white-space: nowrap;
+}
+.main .name { font-size: 34rpx; font-weight: 700; margin: 16rpx 0 8rpx; line-height: 1.4; }
+.desc { color: #6B625A; font-size: 26rpx; line-height: 1.55; }
+.sec { font-weight: 700; margin-bottom: 16rpx; font-size: 30rpx; }
+.kv {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14rpx 0; border-bottom: 1rpx solid #F1E8DD; font-size: 26rpx;
+}
+.kv:last-child { border-bottom: none; padding-bottom: 0; }
+.kv .k { color: #8A8178; }
+.kv .v { color: #2C241C; font-weight: 560; }
+.intro { white-space: pre-wrap; line-height: 1.8; font-size: 28rpx; color: #3A322B; }
+.detail-imgs { margin-top: 20rpx; }
+.detail-img { width: 100%; display: block; border-radius: 16rpx; margin-bottom: 16rpx; background: #F7EEE4; }
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; gap: 12rpx;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: #FFFDF9; border-top: 1rpx solid #EFE6DA;
+}
+.bar-left { display: flex; flex-direction: column; align-items: center; min-width: 96rpx; }
+.cart-ico { font-size: 36rpx; line-height: 1; }
+.btn.sm { min-height: 72rpx; padding: 0 28rpx; border-radius: 999rpx; }
+.btn.ghost.sm { background: #F1E8DD; color: #2C241C; }
+.bar .btn { flex: 1; }
+.empty { text-align: center; padding: 120rpx 40rpx; color: #8A8178; }
+.pressed { opacity: .86; }
+.muted { color: #8A8178; }
+.tiny { font-size: 22rpx; }

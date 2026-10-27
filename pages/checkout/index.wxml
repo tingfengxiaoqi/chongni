@@ -1,0 +1,36 @@
+<view class="page">
+  <view class="card">
+    <view class="h2">收货信息</view>
+    <view class="field">
+      <text class="label">姓名</text>
+      <input class="input" placeholder="收货人" value="{{name}}" bindinput="onName" />
+    </view>
+    <view class="field">
+      <text class="label">手机</text>
+      <input class="input" type="number" maxlength="11" placeholder="11 位手机号" value="{{phone}}" bindinput="onPhone" />
+    </view>
+    <view class="field">
+      <text class="label">地址</text>
+      <textarea class="area" placeholder="详细收货地址" value="{{address}}" bindinput="onAddress" />
+    </view>
+    <view class="field">
+      <text class="label">备注</text>
+      <input class="input" placeholder="可选" value="{{remark}}" bindinput="onRemark" />
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="h2">商品明细</view>
+    <view class="line" wx:for="{{items}}" wx:key="id">
+      <text>{{item.icon}} {{item.name}} ×{{item.count}}</text>
+      <text class="price">¥{{item.lineTotal}}</text>
+    </view>
+    <view class="sum">
+      <text>合计</text>
+      <text class="price strong">¥{{total}}</text>
+    </view>
+  </view>
+
+  <view class="tip muted">提交后订单进入「待支付」。金额以服务端库存与标价为准，可在「我的订单」完成支付。</view>
+  <view class="btn {{submitting ? 'disabled' : ''}}" bindtap="onSubmit" hover-class="pressed">提交订单</view>
+</view>
