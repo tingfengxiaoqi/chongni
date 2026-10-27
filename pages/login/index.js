@@ -1,5 +1,6 @@
 const store = require('../../utils/store')
 const api = require('../../utils/api')
+const nav = require('../../utils/nav')
 
 Page({
   data: {
@@ -13,11 +14,11 @@ Page({
   onShow() {
     const state = store.load()
     if (state.authed && api.getToken() && state.pets.length) {
-      wx.switchTab({ url: '/pages/home/index' })
+      nav.switchTab('/pages/home/index')
       return
     }
     if (state.authed && api.getToken() && !state.pets.length) {
-      wx.redirectTo({ url: '/pages/register/index' })
+      nav.redirectTo('/pages/register/index')
     }
   },
 

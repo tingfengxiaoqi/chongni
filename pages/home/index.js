@@ -1,6 +1,7 @@
 const store = require('../../utils/store')
 const catalog = require('../../data/catalog')
 const api = require('../../utils/api')
+const nav = require('../../utils/nav')
 
 Page({
   data: {
@@ -44,19 +45,23 @@ Page({
   },
 
   async onShow() {
+    const showId = (this._showId || 0) + 1
+    this._showId = showId
     const state = store.load()
     if (!state.authed && !state.guest) {
-      wx.redirectTo({ url: '/pages/login/index' })
+      nav.redirectTo('/pages/login/index')
       return
     }
     if (state.authed && api.getToken()) {
       await store.syncFromServer()
+      if (this._showId !== showId) return
     }
     const next = store.load()
     if (next.authed && !next.pets.length) {
-      wx.redirectTo({ url: '/pages/register/index' })
+      nav.redirectTo('/pages/register/index')
       return
     }
+    if (this._showId !== showId) return
     this.refresh()
   },
 

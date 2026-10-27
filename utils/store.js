@@ -147,12 +147,13 @@ async function syncFromServer() {
 function ensureAuth(options) {
   const state = load()
   const allowGuest = options && options.allowGuest
+  const nav = require('./nav')
   if (!state.authed && !(allowGuest && state.guest)) {
-    wx.redirectTo({ url: '/pages/login/index' })
+    nav.redirectTo('/pages/login/index')
     return null
   }
   if (state.authed && !state.pets.length && !(options && options.allowEmptyPet)) {
-    wx.redirectTo({ url: '/pages/register/index' })
+    nav.redirectTo('/pages/register/index')
     return null
   }
   return state
