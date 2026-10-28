@@ -44,6 +44,18 @@ async function addFriendByPhone(phone) {
   return res.data.friends
 }
 
+async function addFriendFromPost(postId) {
+  const res = await api.request('/api/friends', 'POST', { postId })
+  if (!res.ok) {
+    wx.showToast({ title: res.error || '添加失败', icon: 'none' })
+    return null
+  }
+  store.update((d) => {
+    d.friends = res.data.friends || []
+  })
+  return res.data
+}
+
 async function refreshFriends() {
   const res = await api.request('/api/friends', 'GET')
   if (!res.ok) return []
@@ -68,6 +80,7 @@ module.exports = {
   unreadCount,
   lastPreview,
   addFriendByPhone,
+  addFriendFromPost,
   refreshFriends,
   refreshInbox
 }

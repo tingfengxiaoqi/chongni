@@ -7,7 +7,7 @@ Page({
   data: {
     guest: false,
     greet: '',
-    city: '上海',
+    city: '',
     pet: null,
     age: '未知',
     wormText: '—',
@@ -15,6 +15,7 @@ Page({
     overdue: 0,
     cases: [],
     expenses: [],
+    upcoming: [],
     reminderTypes: catalog.reminderTypes,
     expenseCats: catalog.expenseCats,
     genders: ['公', '母', '未知'],
@@ -37,8 +38,7 @@ Page({
     caseHospital: '',
     caseNote: '',
     editName: '',
-    editBreeds: [],
-    editBreedIndex: 0,
+    editBreed: '',
     editGenderIndex: 0,
     editBirthday: '',
     editWeight: ''
@@ -71,7 +71,7 @@ Page({
       this.setData({
         guest: true,
         greet: store.greet(),
-        city: state.city || '上海',
+        city: state.city || '未定位',
         pet: null
       })
       return
@@ -83,21 +83,41 @@ Page({
       .filter((e) => e.petId === pet.id && String(e.date).startsWith(month))
       .reduce((s, e) => s + Number(e.amount || 0), 0)
     const overdue = (state.reminders || []).filter((r) => r.petId === pet.id && r.date < store.today() && !r.done).length
+    const typeMap = {}
+    ;(catalog.reminderTypes || []).forEach((t) => { typeMap[t.id] = t })
+    const upcoming = (state.reminders || [])
+      .filter((r) => r.petId === pet.id && !r.done && r.date >= store.today())
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 5)
+      .map((r) => {
+        const days = store.daysBetween(store.today(), r.date)
+        const meta = typeMap[r.type] || { icon: '⭐', name: '提醒' }
+        return Object.assign({}, r, {
+          icon: meta.icon,
+          typeName: meta.name,
+          dueText: days === 0 ? '今天' : days + '天后'
+        })
+      })
     this.setData({
       guest: false,
       greet: store.greet(),
-      city: state.city || '上海',
+      city: state.city || '未定位',
       pet,
       age: store.ageText(pet.birthday),
-      wormText: worm == null ? '—' : String(worm),
+      wormText: worm == null ? '—' : (worm === 0 ? '今天' : worm + '天'),
       spend,
       overdue,
+      upcoming,
       cases: (state.cases || []).filter((c) => c.petId === pet.id).slice(-3).reverse(),
       expenses: (state.expenses || []).filter((e) => e.petId === pet.id).slice(-3).reverse(),
       remDate: store.today(),
       expDate: store.today(),
       caseDate: store.today()
     })
+  },
+
+  goCalendar() {
+    wx.switchTab({ url: '/pages/calendar/index' })
   },
 
   nextWormDays(state, pet) {
@@ -230,34 +250,32 @@ Page({
 
   openEdit() {
     const pet = this.data.pet
-    const breeds = catalog.breeds[pet.species] || [pet.breed]
-    let breedIndex = breeds.indexOf(pet.breed)
-    if (breedIndex < 0) breedIndex = 0
     const genders = this.data.genders
     let genderIndex = genders.indexOf(pet.gender)
     if (genderIndex < 0) genderIndex = 0
     this.setData({
       showEdit: true,
       editName: pet.name,
-      editBreeds: breeds,
-      editBreedIndex: breedIndex,
+      editBreed: pet.breed || '',
       editGenderIndex: genderIndex,
       editBirthday: pet.birthday || '',
       editWeight: pet.weight === '' || pet.weight == null ? '' : String(pet.weight)
     })
   },
   onEditName(e) { this.setData({ editName: e.detail.value }) },
-  onEditBreed(e) { this.setData({ editBreedIndex: Number(e.detail.value) }) },
+  onEditBreed(e) { this.setData({ editBreed: e.detail.value }) },
   onEditGender(e) { this.setData({ editGenderIndex: Number(e.detail.value) }) },
   onEditBirthday(e) { this.setData({ editBirthday: e.detail.value }) },
   onEditWeight(e) { this.setData({ editWeight: e.detail.value }) },
   async saveEdit() {
     const name = (this.data.editName || '').trim()
+    const breed = (this.data.editBreed || '').trim()
     if (!name) return wx.showToast({ title: '名字不能为空', icon: 'none' })
+    if (!breed) return wx.showToast({ title: '请填写品种', icon: 'none' })
     const pet = this.data.pet
     const payload = {
       name,
-      breed: this.data.editBreeds[this.data.editBreedIndex],
+      breed,
       gender: this.data.genders[this.data.editGenderIndex],
       birthday: this.data.editBirthday,
       weight: this.data.editWeight ? Number(this.data.editWeight) : ''

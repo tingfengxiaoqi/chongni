@@ -1,5 +1,5 @@
 <view class="page">
-  <view class="sub">{{friends.length}} 位 · 用对方注册手机号添加，聊天经服务端实时转发</view>
+  <view class="sub">{{friends.length}} 位 · 可从广场动态添加，也可手机号添加，人数不限</view>
   <view class="card">
     <view class="friend" wx:for="{{friends}}" wx:key="id" data-id="{{item.id}}" bindtap="onChat" hover-class="pressed">
       <view class="av">{{item.avatar}}</view>

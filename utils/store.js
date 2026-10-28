@@ -14,7 +14,7 @@ function defaultState() {
     phone: '',
     userId: '',
     nickname: '铲屎官',
-    city: '上海',
+    city: '',
     avatar: '🐾',
     joinedAt: today(),
     pets: [],

@@ -25,6 +25,8 @@
         <view class="muted tiny">{{item.city}} · {{item.time}}{{item.breed ? ' · ' + item.breed : ''}}</view>
       </view>
       <view class="more" wx:if="{{item.mine}}" data-id="{{item.id}}" bindtap="onDelete">删除</view>
+      <view class="add-friend" wx:elif="{{item.canAddFriend}}" data-id="{{item.id}}" bindtap="onAddFriend" hover-class="pressed">加好友</view>
+      <view class="friend-tag" wx:elif="{{item.isFriend}}">已好友</view>
     </view>
     <view class="body">{{item.text}}</view>
     <image class="photo" wx:if="{{item.photo}}" src="{{item.photo}}" mode="aspectFill" bindtap="onPreview" data-src="{{item.photo}}" />
@@ -75,6 +77,13 @@
         <image class="photo-preview" src="{{postPhoto}}" mode="aspectFill" />
         <view class="photo-clear" bindtap="onClearPhoto">移除</view>
       </view>
+    </view>
+    <view class="field switch-row" bindtap="onToggleAllowFriend" hover-class="pressed">
+      <view>
+        <view class="field-label">允许通过本动态加好友</view>
+        <view class="muted tiny">关闭后，别人不能从这条动态加你</view>
+      </view>
+      <view class="switch {{allowAddFriend ? 'on' : ''}}"><view class="knob"></view></view>
     </view>
     <view class="btn {{posting ? 'disabled' : ''}}" bindtap="savePost" hover-class="pressed">{{posting ? '发布中…' : '发布到广场'}}</view>
   </view>

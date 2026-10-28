@@ -53,8 +53,13 @@ async function sendSms(phone) {
   return request('/api/auth/sms', 'POST', { phone })
 }
 
-async function login(phone, code, wxCode) {
-  const res = await request('/api/auth/login', 'POST', { phone, code, wxCode: wxCode || '' })
+async function login(phone, code, wxCode, city) {
+  const res = await request('/api/auth/login', 'POST', {
+    phone,
+    code,
+    wxCode: wxCode || '',
+    city: city || ''
+  })
   if (res.ok && res.data.token) setToken(res.data.token)
   return res
 }

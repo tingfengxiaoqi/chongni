@@ -5,7 +5,7 @@ const media = require('../../utils/media')
 
 Page({
   data: {
-    city: '上海',
+    city: '',
     cats: ['全部', '主粮', '零食', '用品', '玩具', '健康', '清洁'],
     mallCat: '全部',
     goods: [],
@@ -21,7 +21,7 @@ Page({
       return
     }
     this.setData({
-      city: state.city || '上海',
+      city: state.city || '未定位',
       cartCount: (state.cart || []).reduce((s, i) => s + i.count, 0)
     })
     await this.loadGoods()

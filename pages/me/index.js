@@ -5,7 +5,7 @@ const api = require('../../utils/api')
 Page({
   data: {
     nickname: '铲屎官',
-    city: '上海',
+    city: '',
     days: 1,
     friendCount: 0,
     postCount: 0,
@@ -31,7 +31,7 @@ Page({
     const days = Math.max(1, store.daysBetween(next.joinedAt || store.today(), store.today()) + 1)
     this.setData({
       nickname: next.nickname || '铲屎官',
-      city: next.city || '上海',
+      city: next.city || '未定位',
       days,
       friendCount: (next.friends || []).length,
       postCount: (next.posts || []).filter((p) => p.mine || p.userId === next.userId).length,
@@ -78,7 +78,8 @@ Page({
   onCity(e) { this.setData({ editCity: e.detail.value }) },
   async saveSettings() {
     const nickname = (this.data.editNick || '').trim() || '铲屎官'
-    const city = (this.data.editCity || '').trim() || '上海'
+    const city = (this.data.editCity || '').trim()
+    if (!city) return wx.showToast({ title: '请填写城市', icon: 'none' })
     if (api.getToken()) {
       const res = await api.request('/api/auth/profile', 'PUT', { nickname, city })
       if (!res.ok) {

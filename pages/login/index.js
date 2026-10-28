@@ -1,6 +1,7 @@
 const store = require('../../utils/store')
 const api = require('../../utils/api')
 const nav = require('../../utils/nav')
+const mapUtil = require('../../utils/map')
 
 Page({
   data: {
@@ -72,14 +73,20 @@ Page({
     }
     this.setData({ loading: true })
     let wxCode = ''
+    let city = ''
     try {
       const loginRes = await new Promise((resolve) => {
         wx.login({ success: resolve, fail: () => resolve(null) })
       })
       wxCode = loginRes && loginRes.code ? loginRes.code : ''
     } catch (e) {}
+    try {
+      city = await mapUtil.detectCity()
+    } catch (e) {
+      city = ''
+    }
 
-    const res = await api.login(phone, code, wxCode)
+    const res = await api.login(phone, code, wxCode, city)
     this.setData({ loading: false })
     if (!res.ok) {
       wx.showToast({ title: res.error || '登录失败', icon: 'none' })
@@ -89,6 +96,11 @@ Page({
       user: res.data.user,
       pets: res.data.pets || []
     })
+    if (city) {
+      store.update((d) => {
+        if (!d.city) d.city = city
+      })
+    }
     await store.syncFromServer()
     const state = store.load()
     if (!state.pets.length) {
@@ -98,10 +110,15 @@ Page({
     wx.switchTab({ url: '/pages/home/index' })
   },
 
-  onGuest() {
+  async onGuest() {
+    let city = ''
+    try {
+      city = await mapUtil.detectCity()
+    } catch (e) {}
     store.update((draft) => {
       draft.guest = true
       draft.authed = false
+      if (city) draft.city = city
     })
     wx.switchTab({ url: '/pages/square/index' })
   }

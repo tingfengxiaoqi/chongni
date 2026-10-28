@@ -1,14 +1,14 @@
 const store = require('../../utils/store')
 const catalog = require('../../data/catalog')
 const api = require('../../utils/api')
+const mapUtil = require('../../utils/map')
 
 Page({
   data: {
     mode: 'create',
     species: 'cat',
     name: '',
-    breeds: catalog.breeds.cat,
-    breedIndex: 0,
+    breed: '',
     genders: ['公', '母', '未知'],
     genderIndex: 0,
     birthday: '',
@@ -16,6 +16,7 @@ Page({
     avatar: '🐱',
     emojis: catalog.emojis.cat,
     photo: '',
+    city: '',
     saving: false
   },
 
@@ -26,17 +27,28 @@ Page({
       wx.redirectTo({ url: '/pages/login/index' })
       return
     }
-    this.setData({ mode })
+    this.setData({ mode, city: state.city || '' })
     wx.setNavigationBarTitle({ title: mode === 'add' ? '添加宠物' : '登记宠物' })
+    this.ensureCity()
+  },
+
+  async ensureCity() {
+    const state = store.load()
+    if (state.city) {
+      this.setData({ city: state.city })
+      return
+    }
+    const city = await mapUtil.detectCity()
+    if (!city) return
+    this.setData({ city })
+    store.update((d) => { d.city = city })
+    await api.request('/api/auth/profile', 'PUT', { city })
   },
 
   syncSpecies(species) {
-    const breeds = catalog.breeds[species] || []
     const emojis = catalog.emojis[species] || []
     this.setData({
       species,
-      breeds,
-      breedIndex: 0,
       emojis,
       avatar: emojis[0] || '🐾',
       photo: ''
@@ -45,7 +57,7 @@ Page({
 
   onSpecies(e) { this.syncSpecies(e.currentTarget.dataset.id) },
   onName(e) { this.setData({ name: e.detail.value }) },
-  onBreed(e) { this.setData({ breedIndex: Number(e.detail.value) }) },
+  onBreed(e) { this.setData({ breed: e.detail.value }) },
   onGender(e) { this.setData({ genderIndex: Number(e.detail.value) }) },
   onBirthday(e) { this.setData({ birthday: e.detail.value }) },
   onWeight(e) { this.setData({ weight: e.detail.value }) },
@@ -79,15 +91,20 @@ Page({
   async onSave() {
     if (this.data.saving) return
     const name = (this.data.name || '').trim()
+    const breed = (this.data.breed || '').trim()
     if (!name) {
       wx.showToast({ title: '给毛孩子起个名字吧', icon: 'none' })
+      return
+    }
+    if (!breed) {
+      wx.showToast({ title: '请填写品种', icon: 'none' })
       return
     }
     this.setData({ saving: true })
     const payload = {
       species: this.data.species,
       name,
-      breed: this.data.breeds[this.data.breedIndex],
+      breed,
       gender: this.data.genders[this.data.genderIndex],
       birthday: this.data.birthday,
       weight: this.data.weight ? Number(this.data.weight) : '',

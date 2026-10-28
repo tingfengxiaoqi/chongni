@@ -1,5 +1,6 @@
 const store = require('../../utils/store')
 const api = require('../../utils/api')
+const chat = require('../../utils/chat')
 
 const EMOJI_POOL = ['🐱', '🐶', '🛁', '💤', '🦴', '🌿', '🎾', '🐟', '☀️', '🏠', '✨', '❤️']
 
@@ -14,6 +15,7 @@ Page({
     postText: '',
     postImgs: ['✨', '🐾'],
     postPhoto: '',
+    allowAddFriend: true,
     posting: false,
     emojiPool: EMOJI_POOL,
     showComments: false,
@@ -146,12 +148,33 @@ Page({
       postText: '',
       postImgs: ['✨', '🐾'],
       postPhoto: '',
+      allowAddFriend: true,
       posting: false
     })
   },
   closePost() { this.setData({ showPost: false }) },
   noop() {},
   onPostText(e) { this.setData({ postText: e.detail.value }) },
+  onToggleAllowFriend() {
+    this.setData({ allowAddFriend: !this.data.allowAddFriend })
+  },
+
+  async onAddFriend(e) {
+    if (this.data.guest) {
+      wx.showToast({ title: '登录后才能加好友', icon: 'none' })
+      return
+    }
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    const result = await chat.addFriendFromPost(id)
+    if (!result) return
+    wx.showToast({ title: '已添加好友', icon: 'none' })
+    const posts = (this.data.posts || []).map((p) => {
+      if (p.id !== id) return p
+      return Object.assign({}, p, { canAddFriend: false, isFriend: true })
+    })
+    this.setData({ posts })
+  },
 
   onToggleEmoji(e) {
     const emoji = e.currentTarget.dataset.emoji
@@ -196,7 +219,8 @@ Page({
     const res = await api.request('/api/posts', 'POST', {
       text,
       imgs: this.data.postImgs,
-      photo: this.data.postPhoto || ''
+      photo: this.data.postPhoto || '',
+      allowAddFriend: this.data.allowAddFriend !== false
     })
     this.setData({ posting: false })
     if (!res.ok) return wx.showToast({ title: res.error || '发布失败', icon: 'none' })

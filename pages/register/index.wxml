@@ -1,7 +1,7 @@
 <view class="page">
   <view class="kicker">{{mode === 'add' ? '再请一只毛孩子' : '注册第 2 步 · 登记宠物'}}</view>
   <view class="h1">{{mode === 'add' ? '家里还有谁？' : '家里那位，介绍一下？'}}</view>
-  <view class="sub">这些信息之后随时能改</view>
+  <view class="sub">这些信息之后随时能改{{city ? ' · 当前城市 ' + city : ''}}</view>
 
   <view class="species">
     <view class="sp {{species === 'cat' ? 'on' : ''}}" data-id="cat" bindtap="onSpecies" hover-class="pressed">
@@ -25,9 +25,7 @@
   <view class="row-2">
     <view class="field">
       <text class="field-label">品种</text>
-      <picker class="picker" range="{{breeds}}" value="{{breedIndex}}" bindchange="onBreed">
-        <view>{{breeds[breedIndex]}}</view>
-      </picker>
+      <input class="input" placeholder="自己填写，如英短" value="{{breed}}" bindinput="onBreed" maxlength="20" />
     </view>
     <view class="field">
       <text class="field-label">性别</text>

@@ -62,24 +62,71 @@
       <view class="kv"><text class="k">体重</text><text>{{pet.weight ? pet.weight + ' kg' : '未记录'}}</text></view>
     </view>
 
-    <view class="card" wx:if="{{cases.length}}">
-      <view class="sec-head"><text class="sec-title">最近病例</text></view>
-      <view class="item" wx:for="{{cases}}" wx:key="id">
-        <view class="item-title">{{item.title}}</view>
-        <view class="muted tiny">{{item.date}}</view>
-        <view class="muted" wx:if="{{item.note}}">{{item.note}}</view>
+    <view class="card">
+      <view class="sec-head">
+        <text class="sec-title">即将到来</text>
+        <text class="edit" bindtap="goCalendar">日历</text>
+      </view>
+      <block wx:if="{{upcoming.length}}">
+        <view class="item row" wx:for="{{upcoming}}" wx:key="id">
+          <view class="up-left">
+            <text class="up-ico">{{item.icon}}</text>
+            <view>
+              <view class="item-title">{{item.title || item.typeName}}</view>
+              <view class="muted tiny">{{item.date}} · {{item.typeName}}</view>
+            </view>
+          </view>
+          <view class="due">{{item.dueText}}</view>
+        </view>
+      </block>
+      <view class="empty-block" wx:else>
+        <view class="muted">还没有待办提醒</view>
+        <view class="link" bindtap="openReminder">添加提醒</view>
       </view>
     </view>
 
-    <view class="card" wx:if="{{expenses.length}}">
-      <view class="sec-head"><text class="sec-title">最近花销</text></view>
-      <view class="item row" wx:for="{{expenses}}" wx:key="id">
-        <view>
-          <view class="item-title">{{item.title}}</view>
-          <view class="muted tiny">{{item.cat}} · {{item.date}}</view>
-        </view>
-        <view>¥{{item.amount}}</view>
+    <view class="card">
+      <view class="sec-head">
+        <text class="sec-title">最近花销</text>
+        <text class="edit" bindtap="openExpense">记一笔</text>
       </view>
+      <block wx:if="{{expenses.length}}">
+        <view class="item row" wx:for="{{expenses}}" wx:key="id">
+          <view>
+            <view class="item-title">{{item.title}}</view>
+            <view class="muted tiny">{{item.cat}} · {{item.date}}</view>
+          </view>
+          <view class="amt">¥{{item.amount}}</view>
+        </view>
+      </block>
+      <view class="empty-block" wx:else>
+        <view class="muted">本月还没记账</view>
+        <view class="link" bindtap="openExpense">记一笔花销</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="sec-head">
+        <text class="sec-title">最近病例</text>
+        <text class="edit" bindtap="openCase">写病例</text>
+      </view>
+      <block wx:if="{{cases.length}}">
+        <view class="item" wx:for="{{cases}}" wx:key="id">
+          <view class="item-title">{{item.title}}</view>
+          <view class="muted tiny">{{item.date}}{{item.hospital ? ' · ' + item.hospital : ''}}</view>
+          <view class="muted" wx:if="{{item.note}}">{{item.note}}</view>
+        </view>
+      </block>
+      <view class="empty-block" wx:else>
+        <view class="muted">还没有病例记录</view>
+        <view class="link" bindtap="openCase">记下就诊情况</view>
+      </view>
+    </view>
+
+    <view class="card tip-soft">
+      <view class="sec-title">养宠小贴士</view>
+      <view class="tip-line">定期驱虫、按时疫苗，比临时就医更省心。</view>
+      <view class="tip-line">体重有变化时，记得回来改一下档案。</view>
     </view>
   </view>
 </block>
@@ -146,7 +193,7 @@
     <view class="field"><text class="field-label">名字</text><input class="input" value="{{editName}}" bindinput="onEditName" /></view>
     <view class="row-2">
       <view class="field"><text class="field-label">品种</text>
-        <picker class="picker" range="{{editBreeds}}" value="{{editBreedIndex}}" bindchange="onEditBreed"><view>{{editBreeds[editBreedIndex]}}</view></picker>
+        <input class="input" placeholder="自己填写" value="{{editBreed}}" bindinput="onEditBreed" maxlength="20" />
       </view>
       <view class="field"><text class="field-label">性别</text>
         <picker class="picker" range="{{genders}}" value="{{editGenderIndex}}" bindchange="onEditGender"><view>{{genders[editGenderIndex]}}</view></picker>

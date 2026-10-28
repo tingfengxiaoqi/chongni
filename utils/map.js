@@ -53,6 +53,23 @@ async function searchNearby(lat, lng, type) {
   return api.request(path, 'GET')
 }
 
+function normalizeCity(value) {
+  let city = value
+  if (Array.isArray(city)) city = city[0] || ''
+  city = String(city || '').trim()
+  if (!city || city === '[]') return ''
+  return city.replace(/市$/, '')
+}
+
+/** 定位并逆地理得到城市名；失败返回空字符串 */
+async function detectCity() {
+  const loc = await locate()
+  if (!loc.ok) return ''
+  const res = await searchNearby(loc.lat, loc.lng, 'hospital')
+  if (!res.ok) return ''
+  return normalizeCity(res.data && res.data.city)
+}
+
 function openPlace(place) {
   if (!place || place.lat == null || place.lng == null) {
     wx.showToast({ title: '没有坐标', icon: 'none' })
@@ -79,6 +96,8 @@ function callPlace(place) {
 module.exports = {
   locate,
   searchNearby,
+  detectCity,
+  normalizeCity,
   openPlace,
   callPlace
 }
